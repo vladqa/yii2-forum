@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\RegForm;
 
 class SiteController extends Controller
 {
@@ -92,5 +93,21 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionSay($message = 'Дефолт')
+    {
+        return $this->render('say', ['message' => $message]);
+    }
+
+    public function actionRegistration()
+    {
+        $model = new RegForm;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            return $this->render('registration-confirm', ['model' => $model]);
+        } else {
+            return $this->render('registration', ['model' => $model]);
+        }
     }
 }
