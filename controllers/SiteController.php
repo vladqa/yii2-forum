@@ -95,11 +95,6 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionSay($message = 'Дефолт')
-    {
-        return $this->render('say', ['message' => $message]);
-    }
-
     public function actionRegistration()
     {
         $model = new RegForm;
