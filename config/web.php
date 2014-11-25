@@ -38,10 +38,16 @@ $config = [
             ],
         ],
         'urlManager' => [
-            'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-        ],
+            'rules' => [
+                'about' => 'site/about',
+                'contact' => 'site/contact',
+                'registration' => 'site/registration',
+                'login' => 'site/login',
+                '' => 'site/index',
+            ],
+        ], 
         'db' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
@@ -55,7 +61,7 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
-        'allowedIPs' => ['127.0.0.1', '80.79.241.142' ],
+        'allowedIPs' => ['127.0.0.1', '80.79.241.142', '109.205.249.143' ],
         ];
 }
 
