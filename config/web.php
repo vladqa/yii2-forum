@@ -43,7 +43,7 @@ $config = [
             'rules' => [
                 'about' => 'site/about',
                 'contact' => 'site/contact',
-                'registration' => 'site/registration',
+                'registration' => 'user/create',
                 'login' => 'site/login',
                 '' => 'site/index',
             ],
