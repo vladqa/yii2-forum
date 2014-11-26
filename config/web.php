@@ -40,13 +40,13 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
+/*            'rules' => [
                 'about' => 'site/about',
                 'contact' => 'site/contact',
-                'registration' => 'user/create',
-                'login' => 'site/login',
+                'registration' => 'user/registration',
+                'login' => 'user/login',
                 '' => 'site/index',
-            ],
+                ],*/
         ], 
         'db' => require(__DIR__ . '/db.php'),
     ],
