@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\helpers\Security;
 
 /**
  * This is the model class for table "user".
@@ -12,9 +13,8 @@ use yii\base\Model;
  * @property string $login
  * @property string $password
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $rememberMe = true;
     /**
      * @inheritdoc
      */
@@ -26,38 +26,69 @@ class User extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public static function findIdentity($id)
     {
-        return [
-            [['login', 'password'], 'required'],
-            [['login'], 'string', 'max' => 30],
-            [['password'], 'string', 'max' => 32],
-            [['login'], 'unique']
-//            ['password', 'validatePassword'],
-        ];
+        return static::findOne($id);
     }
-/*
-    public function login()
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
     {
-        return [
-            [['login', 'password'], 'required'],
-            [['login'], 'string', 'max' => 30],
-            [['password'], 'string', 'max' => 32],
-            [['login'], 'unique']
-        ];
+        return static::findOne(['access_token' => $token]);
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->authKey === $authKey;
     }
 
-    public function validatePassword($attribute, $params)
-    {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+    /**
+     * Finds user by username
+     *
+     * @param  string      $username
+     * @return static|null
+    public static function findByUsername($username)
+    {
+        foreach (self::$users as $user) {
+            if (strcasecmp($user['username'], $username) === 0) {
+                return new static($user);
             }
         }
+        return null;
+    }
+     */
+
+    public static function findById($id)
+    {
+        return User::findOne($id);
     }
 
+    public static function findByLogin($login)
+    {
+        return User::findOne(['login' => $login]);
+    }
+    public function validatePassword($password)
+    {
+        return $this->password === $password;
+    }
 
     /**
      * @inheritdoc

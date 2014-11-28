@@ -3,55 +3,37 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
+use app\models\Posts;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\User;
-use app\models\LoginForm;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * PostsController implements the CRUD actions for Posts model.
  */
-class UserController extends Controller
+class PostsController extends Controller
 {
-     public function behaviors()
+    public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'login', 'registration'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'actions' => ['login','registration','logout'],
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['logout'],
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
     }
 
     /**
-     * Lists all User models.
+     * Lists all Posts models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => User::find(),
+            'query' => Posts::find(),
         ]);
 
         return $this->render('index', [
@@ -60,8 +42,8 @@ class UserController extends Controller
     }
 
     /**
-     * Displays a single User model.
-     * @param integer $id
+     * Displays a single Posts model.
+     * @param string $id
      * @return mixed
      */
     public function actionView($id)
@@ -72,29 +54,29 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new User model.
+     * Creates a new Posts model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionRegistration()
+    public function actionCreate()
     {
-        $model = new User();
+        $model = new Posts();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('registration', [
+            return $this->render('create', [
                 'model' => $model,
             ]);
         }
     }
 
     /**
-     * Updates an existing User model.
+     * Updates an existing Posts model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
-    *
+     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -109,11 +91,11 @@ class UserController extends Controller
     }
 
     /**
-     * Deletes an existing User model.
+     * Deletes an existing Posts model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param string $id
      * @return mixed
-
+     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
@@ -122,42 +104,18 @@ class UserController extends Controller
     }
 
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the Posts model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return User the loaded model
+     * @param string $id
+     * @return Posts the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = Posts::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
-    public function actionLogin()
-    {
-        $model = new LoginForm();
-
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->loginUser()) {
-                return $this->goBack();
-            } else {
-                return $this->render('login', [
-                    'model' => $model,
-                    ]);
-            }
-    }
-    
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-        return $this->goHome();
-    }
-
 }

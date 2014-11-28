@@ -15,17 +15,6 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -80,14 +69,4 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionRegistration()
-    {
-        $model = new RegForm;
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            return $this->render('registration-confirm', ['model' => $model]);
-        } else {
-            return $this->render('registration', ['model' => $model]);
-        }
-    }
 }
